@@ -120,7 +120,19 @@ public class FruitService {
 
     //Calculate the total amount
     public double getAmount(UserInput userInput){
-        return getTotalAmountOfFruitInput(userInput) + getPriceOfCarton(userInput);
+        return getTotalAmountOfFruitInput(userInput) + getPriceOfCarton(userInput) - getDiscount(userInput);
+    }
+
+    //calculate the discount
+    public double getDiscount(UserInput userInput){
+        Fruit fruit = fruitRepository.findFruitByName(userInput.getFruitName());
+        int carton = (userInput.getFruitCount()/ fruit.getCartonQty()) + userInput.getCartonCount();
+        if(carton >= 2){
+            return (fruit.getCartonPrice() * 0.2) * carton;
+        }
+        return 0;
+
+
     }
 
 

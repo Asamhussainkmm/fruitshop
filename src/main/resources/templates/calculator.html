@@ -17,6 +17,12 @@
                 scrollTop: $("#f").offset().top
             }, 500);
         });
+
+        function verify(){
+            if(!document.getElementById('id_remarks').value.trim().length){
+                alert("Please enter the remarks");
+            }
+        }
     </script>
 </head>
 <body>
@@ -56,14 +62,17 @@
                 <li class="list-group-item list-group-item-secondary"
                     th:text="'Fruits Price (Fruits QTY) : ' + ${total_carton} + ' Carton and ' + ${balance_fruit} + ' Fruit = Rs.' + ${#numbers.formatDecimal(amount_of_fruits_input, 0, 'COMMA', 2, 'POINT')}"/>
                 <li class="list-group-item list-group-item-success"
-                    th:text="'Total Fruits Price : ' + ${price_of_all_carton} + ' + ' + ${amount_of_fruits_input} + ' = Rs.' + ${#numbers.formatDecimal(result, 0, 'COMMA', 2, 'POINT')}"/>
+                    th:text="'Discount for ' + ${(total_carton == null? 0 : total_carton) + (carton_input_count == null? 0 : carton_input_count)} + ' Carton : Rs.' + ${#numbers.formatDecimal(discount_amount, 0, 'COMMA', 2, 'POINT')}"/>
+                <li class="list-group-item list-group-item-dark"
+                    th:text="'Total Fruits Price : ' + ${price_of_all_carton} + ' + ' + ${amount_of_fruits_input} + ' - ' + ${discount_amount} + ' = Rs.' + ${#numbers.formatDecimal(result, 0, 'COMMA', 2, 'POINT')}"/>
+
             </ul>
 
         </div>
 
         <div>
             <div class="d-grid">
-                <button type="submit" name="calc" class="btn btn-dark p-2 m-2 btn-block">Calculate</button>
+                <button type="submit" name="calc" class="btn btn-dark p-2 m-2 btn-block" onclick="verify()" >Calculate</button>
             </div>
 
         </div>
@@ -87,7 +96,7 @@
             <th>Price</th>
         </tr>
         <tr th:each="fruit_price, state:${pricesList}">
-            <td th:text="${fruit_input_count} == 0? '0 Cartn 0 Fruit' : ${state.count/carton_count} + ' Carton ' + ${state.count%carton_count} + ' Fruit '"/>
+            <td th:text="${fruit_input_count} == 0? '0 Carton 0 Fruit' : ${state.count/carton_count} + ' Carton ' + ${state.count%carton_count} + ' Fruit '"/>
             <td th:text="'Rs.' + ${#numbers.formatDecimal(fruit_price, 0, 'COMMA', 2, 'POINT')}"/>
         </tr>
     </table>

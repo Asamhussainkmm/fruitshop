@@ -78,6 +78,9 @@ public class CalculatorController {
 
             //Attach the total price of the fruits without carton input
             model.addAttribute("amount_of_fruits_input", fruitService.getTotalAmountOfFruitInput(userInput));
+
+            //Attach the discount
+            model.addAttribute("discount_amount", fruitService.getDiscount(userInput));
         }
         else {
             //for the wrong input
