@@ -71,8 +71,7 @@ public class FruitService {
     }
 
     //Calculate the carton count by user input in the qty
-    public int getCartonCount(UserInput userInput){
-        Fruit mFruit = fruitRepository.findFruitByName(userInput.getFruitName());
+    public int getCartonCount(Fruit mFruit, UserInput userInput){
         return userInput.getFruitCount()/mFruit.getCartonQty();
     }
 
@@ -82,15 +81,12 @@ public class FruitService {
     }
 
     //Calculate the total price of carton
-    public double getPriceOfCarton(UserInput userInput){
-
-        Fruit mFruit = fruitRepository.findFruitByName(userInput.getFruitName());
+    public double getPriceOfCarton(Fruit mFruit, UserInput userInput){
         return mFruit.getCartonPrice() * userInput.getCartonCount();
     }
 
     //Calculate the total amount of fruits inputs
-    public double getTotalAmountOfFruitInput(UserInput userInput){
-        Fruit mFruit = fruitRepository.findFruitByName(userInput.getFruitName());
+    public double getTotalAmountOfFruitInput(Fruit mFruit, UserInput userInput){
         double fruitPrice = mFruit.getFruitPrice();
         int cartonQty = mFruit.getCartonQty();
         double cartonPrice = mFruit.getCartonPrice();
@@ -119,13 +115,12 @@ public class FruitService {
     }
 
     //Calculate the total amount
-    public double getAmount(UserInput userInput){
-        return getTotalAmountOfFruitInput(userInput) + getPriceOfCarton(userInput) - getDiscount(userInput);
+    public double getAmount(Fruit mFruit, UserInput userInput){
+        return getTotalAmountOfFruitInput(mFruit, userInput) + getPriceOfCarton(mFruit, userInput) - getDiscount(mFruit, userInput);
     }
 
     //calculate the discount
-    public double getDiscount(UserInput userInput){
-        Fruit fruit = fruitRepository.findFruitByName(userInput.getFruitName());
+    public double getDiscount(Fruit fruit, UserInput userInput){
         int carton = (userInput.getFruitCount()/ fruit.getCartonQty()) + userInput.getCartonCount();
         if(carton >= 2){
             return (fruit.getCartonPrice() * 0.2) * carton;
@@ -133,6 +128,19 @@ public class FruitService {
         return 0;
 
 
+    }
+
+    //Create discount list
+    public List<Double> getDiscountList(Fruit fruit, UserInput userInput){
+        List<Double> discountList = new ArrayList<>();
+        int carton = userInput.getFruitCount()/fruit.getCartonQty();
+        if(carton >= 2){
+            discountList.add((fruit.getCartonPrice() * 0.2) * carton);
+        }
+        else {
+            discountList.add(0.0);
+        }
+        return discountList;
     }
 
 

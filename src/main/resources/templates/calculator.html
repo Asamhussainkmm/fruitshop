@@ -94,11 +94,18 @@
         <tr>
             <th>Quantity</th>
             <th>Price</th>
+            <th>Discount</th>
+            <th>Discounted Price</th>
         </tr>
-        <tr th:each="fruit_price, state:${pricesList}">
-            <td th:text="${fruit_input_count} == 0? '0 Carton 0 Fruit' : ${state.count/carton_count} + ' Carton ' + ${state.count%carton_count} + ' Fruit '"/>
+
+        <tr th:each="fruit_price, state:${pricesList}" >
+            <td th:text="${fruit_input_count} == 0? '0 Carton 0 Fruit' : ${state.count/carton_count} + ' Carton ' + ${state.count%carton_count} + ' Fruit'"/>
             <td th:text="'Rs.' + ${#numbers.formatDecimal(fruit_price, 0, 'COMMA', 2, 'POINT')}"/>
+            <td th:text="'Rs.' + ${#numbers.formatDecimal((state.count/carton_count >=2 ? carton_price * 0.2 * (state.count/carton_count): 0.0), 0, 'COMMA', 2, 'POINT')}"/>
+            <td th:text="'Rs.' + ${#numbers.formatDecimal((fruit_price - (state.count/carton_count >=2 ? carton_price * 0.2 * (state.count/carton_count): 0.0)), 0, 'COMMA', 2, 'POINT')}"/>
+
         </tr>
+
     </table>
 
     </div>

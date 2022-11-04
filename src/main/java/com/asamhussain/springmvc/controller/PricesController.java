@@ -28,11 +28,21 @@ public class PricesController {
     //Return the view of Prices.html
     @GetMapping("prices")
     public String getContactPage(Model model){
+
         //Retrieve Apple details from DB Prepare the price list for 25 apples
-        priceListApple = fruitService.getPriceList(25, fruitService.getFruitByName("Apple"));
+        Fruit apple = fruitService.getFruitByName("Apple");
+        priceListApple = fruitService.getPriceList(25, apple);
+
 
         //Retrieve King Coconut details from DB Prepare the price list for 25 King Coconut
-        priceListKingCoconut = fruitService.getPriceList(25, fruitService.getFruitByName("KingCoconut"));
+        Fruit kingCoconut = fruitService.getFruitByName("KingCoconut");
+        priceListKingCoconut = fruitService.getPriceList(25, kingCoconut);
+
+        //attach fruits details
+        model.addAttribute("a_carton_price", apple.getCartonPrice());
+        model.addAttribute("a_carton_qty", apple.getCartonQty());
+        model.addAttribute("k_carton_price", kingCoconut.getCartonPrice());
+        model.addAttribute("k_carton_qty", kingCoconut.getCartonQty());
 
         //Attach the lists to model
         model.addAttribute("pricesApple", priceListApple);

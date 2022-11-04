@@ -42,14 +42,15 @@ public class CalculatorController {
     //Button click action
     @RequestMapping(value = "/calculator", params = "calc", method = RequestMethod.POST)
     public String calc(@ModelAttribute("userInput") UserInput userInput, BindingResult result, Model model){
+
+        Fruit fruit = fruitService.getFruitByName(userInput.getFruitName());
         //error checking
         if(!result.hasErrors()){
 
-            Fruit fruit = fruitService.getFruitByName(userInput.getFruitName());
 
-            model.addAttribute("result", fruitService.getAmount(userInput));
+            model.addAttribute("result", fruitService.getAmount(fruit, userInput));
 
-            //Retrieve Apple details from DB Prepare the price list
+            //Retrieve fruit details from DB Prepare the price list
             List <Double> priceList = fruitService.getPriceList(userInput.getFruitCount(), fruit);
 
             //Attach the lists to model
@@ -68,25 +69,28 @@ public class CalculatorController {
             model.addAttribute("fruit_input_count", userInput.getFruitCount());
 
             //Attach the price of total amount of cartons (user input)
-            model.addAttribute("price_of_all_carton", fruitService.getPriceOfCarton(userInput));
+            model.addAttribute("price_of_all_carton", fruitService.getPriceOfCarton(fruit, userInput));
 
             //Attach the quantity of cartons using user Fruits quantity input
-            model.addAttribute("total_carton", fruitService.getCartonCount(userInput));
+            model.addAttribute("total_carton", fruitService.getCartonCount(fruit, userInput));
 
             //Attach the balance fruits quantity after cartons
             model.addAttribute("balance_fruit", fruitService.getFruitsAfterCarton(fruit, userInput));
 
             //Attach the total price of the fruits without carton input
-            model.addAttribute("amount_of_fruits_input", fruitService.getTotalAmountOfFruitInput(userInput));
+            model.addAttribute("amount_of_fruits_input", fruitService.getTotalAmountOfFruitInput(fruit, userInput));
 
             //Attach the discount
-            model.addAttribute("discount_amount", fruitService.getDiscount(userInput));
+            model.addAttribute("discount_amount", fruitService.getDiscount(fruit, userInput));
+
+            //Attach the discount list
+            ///model.addAttribute("discount_list", fruitService.getDiscountList(fruit, userInput));
         }
         else {
             //for the wrong input
             userInput.setCartonCount(0);
             userInput.setFruitCount(0);
-            model.addAttribute("result", fruitService.getAmount(userInput));
+            model.addAttribute("result", fruitService.getAmount(fruit, userInput));
 
         }
 
